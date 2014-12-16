@@ -1,0 +1,44 @@
+
+<ul class="list-group">
+	{% for item in comment %}
+	<li class="list-group-item">
+		<div class="row">
+			<div class="col-xs-2 col-md-1">
+				<img src="http://placekitten.com/{{ item.myuser.id|add:"80" }}/{{ item.myuser.id|add:"80" }}" class="img-circle img-responsive" alt="" />
+			</div>
+			<div class="col-xs-10 col-md-11">
+				<div>
+					<strong>{{ item.title }}{% if item.spoiler %} <span style="color:red;">[有关键情节透露QAQ]</span>{% endif %}</strong>
+					<button type="button" class="btn btn-danger btn-xs btn-qt" xxurl="{% url 'library:comment_del' item.id %}"   style="float:right; margin-right:5px"><span class="glyphicon glyphicon-remove"></span></button>
+					<div class="mic-info">
+						By: <a href="{% url 'library:search' %}?q={{ item.myuser.name }}" target="_blank">{{ item.myuser.name }}</a> on {{ item.datetime|date:"Y M d D P" }}
+					</div>
+				</div>
+				{% if item.spoiler %}
+					<div class="comment-text spoiler-comment">
+				{% else %}
+					<div class="comment-text">
+				{% endif %}
+						{{ item.content|linebreaks }}
+					</div>
+				<div class="rate-star-panel">
+					<ul class="list-unstyled">
+						<li class="small-star">
+							评分：
+							{% for i in range5 %}{% if forloop.counter <= item.rate %}<span class="glyphicon glyphicon-star"></span>{% else %}<span class="glyphicon glyphicon-star-empty"></span>{% endif %}{% endfor %}
+						<span class="rate-score">{{ item.rate }}</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</li>
+	{% endfor %}
+</ul>
+
+{% if comment.has_next %}
+<a href="{% url 'library:ajax_comment' comment.0.book.id %}?page={{ comment.next_page_number }}" class="btn btn-default btn-sm btn-block scroll-next" role="button"><span class="glyphicon glyphicon-refresh"></span> Load More</a>
+{% endif %}
+
+
+ 

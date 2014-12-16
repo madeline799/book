@@ -1,0 +1,50 @@
+<h2>
+{% if user.is_authenticated %}
+	0.{{ user.myuser.name }}
+    <br>
+    1.{{ user.username }}
+    <br>
+    2.qt~<label></label>{{ user.password }}
+    <br>
+    3.{{ user.email }}
+    <br>
+    4.{{ user.date_joined }}
+    <br>
+    5.{{ user.is_superuser }}
+    <br>
+    6.{{ user.last_login }}
+    <br>
+    7.{{ user.groups }}
+    <br>
+    8.{{ user.user_permissions }}
+    <br>
+    9.{{ user.is_staff }}
+    10.<a href="{% url 'library:logout' %}">Logout</a>
+{% else %}
+    Guest ;-)
+{% endif %}
+</h2>
+<h2>Register:</h2>
+<form action="{% url 'library:register' %}" method="post">
+{% csrf_token %}
+{% for field in r %}
+<div>
+1.{{ field.errors }}
+2.{{ field.label_tag }}
+3.{{ field.value }}
+4.{{ field.html_name }}
+5.{{ field.help_text }}
+6.{{ field.is_hidden }}
+7.{{ field }}
+8.<br>
+{{ field.field.id }}
+</div>
+{% endfor %}
+<input type="submit" value="Submit" />
+</form>
+<h2>Login:</h2>
+<form action="{% url 'library:login' %}" method="post">
+{% csrf_token %}
+{{ l.as_p }}
+<input type="submit" value="Submit" />
+</form>

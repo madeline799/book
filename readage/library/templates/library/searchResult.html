@@ -1,0 +1,96 @@
+{% extends 'library/base.html' %}
+{% load staticfiles %}
+
+{% block define_head %}
+  <title>{% if not q|default:"null" == "null" %}{{ q }} - {% endif %}云图智能搜索 - ReadTogether</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="shortcut icon" href="{% static 'library/img/favicon.ico' %}">
+{% endblock define_head %}
+
+{% block define_CSS %}
+  <!-- Custom styles for this template -->
+  <link href="{% static 'library/common-qt.css' %}" rel="stylesheet">
+  <link href="{% static 'library/common-qt-index.css' %}" rel="stylesheet">
+{% endblock define_CSS %}
+
+
+{% block main %}
+<!--
+<ul class="nav navbar-nav">
+  <form class="navbar-form navbar-left" role="search" action="{% url 'library:search' %}" method="get">
+    <div class="form-group">
+      <input type="text" class="form-control" name="q" placeholder="Which book do you like?" value="{{ q }}">
+    </div>
+    <button type="submit" class="btn btn-default">Search</button>
+  </form>
+</ul>
+-->
+
+<div class="container" id="search-panel">
+  <div class="row">
+    <div class="col-xs-0 col-md-1 "></div>
+    <div class="col-xs-12 col-md-10 ">
+      <img src="{% static 'library/img/logo.jpg' %}" class="img-responsive " alt="Responsive image">
+    </div>    
+    <div class="col-xs-0 col-md-1"></div>
+  </div>
+</div>
+
+<div class="container">
+<div class="row">
+  <div class="col-xs-0 col-md-1 "></div>
+  <div class="col-xs-12 col-md-10 ">
+    <div class="alert alert-success">
+      <h3><strong class="text-danger"> {% if q|default:"null" != "null" %}{{ q }}</strong><strong> 的{% endif %}</strong><strong>搜索结果</strong></h3>
+      <table class="table table-striped magword">
+        <thead>
+          <tr>
+            <th></th>
+            <!--<th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>-->
+          </tr>
+        </thead>
+        <tbody>
+          {% if q|default:"null" == "null" %}
+            <tr><td><br><h4>您还没有输入想要搜索的内容</h4><br>建议：<br>直接使用上方的搜索框吧～<br>我们的智能搜索会全力帮您检索相关图书～<br>书名、作者、出版社什么的，轻松搞定！<br>或者？试试 <a href="/search/?q=&lucky=" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-star"></span> I am Feeling lucky</a>？
+            </td><td></td></tr>
+          {% else %}
+          {% for item in result %}
+          <tr>
+            <td>
+              {{ forloop.counter }}
+            </td>
+            <td>
+            <div class="row">
+              <div class="col-lg-3 col-sm-3 col-xs-12"><a href="{% url 'library:book' item.id %}">{{ item.simple_name }}</a></div>
+              <div class="col-lg-2 col-sm-2 col-xs-12">{{ item.author }}</div>
+              <div class="col-lg-2 col-sm-2 col-xs-12">{{ item.press }}</div>
+              <div class="col-lg-2 col-sm-3 col-xs-12">{% for i in "abcde" %}{% if forloop.counter <= item.rate %}<span class="glyphicon glyphicon-star"></span>{% else %}<span class="glyphicon glyphicon-star-empty"></span>{% endif %}{% endfor %} {{ item.rate|floatformat:1 }}</div>
+              <div class="col-lg-3 col-sm-2 col-xs-12">{{ item.simple_version }}</div>
+            </div>
+            </td>  
+            <!--
+            <td>{{ forloop.counter }}</td>
+            <td><a href="{% url 'library:book' item.id %}">{{ item.simple_name }}</a></td>
+            <td>{{ item.author }}</td>
+            <td>{{ item.press }}</td>
+            <td>{% for i in "abcde" %}{% if forloop.counter <= item.rate %}<span class="glyphicon glyphicon-star"></span>{% else %}<span class="glyphicon glyphicon-star-empty"></span>{% endif %}{% endfor %} {{ item.rate|floatformat:1 }}</td>
+            <td>{{ item.simple_version }}</td>
+          -->
+          </tr>
+          {% empty %}
+          <tr><td><br><h4>抱歉，没有找到与<em class="text-danger"> "{{ q }}" </em>相关的书籍</h4><br>建议：<br>1. 检查输入是否正确<br>2. 尝试用作者、出版社等其他信息来搜索<br>3. 点击页面右下方的按钮来联系我们吧=w=<!--</td><td></td><td></td><td></td><td>--></td><td></td></tr>
+          {% endfor %}
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-xs-0 col-md-1 "></div>
+</div>
+</div>
+{% endblock main %}

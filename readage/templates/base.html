@@ -1,0 +1,518 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% block define_head %}
+    {% endblock define_head %}
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" media="screen">   
+    <link rel="stylesheet" href="{% static 'webfontkit/stylesheet.css' %}" type="text/css"charset="utf-8" />
+    <style type="text/css">
+          .flavor{font-family: 'flavorsregular';}
+          #footer {
+          color: #999;
+          padding: 6px 0;
+          margin-top: 36px;
+          overflow: hidden;
+          zoom: 1;
+          border-top: 1px dashed #ddd;
+          }
+    </style>
+    
+    {% block define_CSS %}
+    {% endblock define_CSS %}
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+<body>
+{% block login_fade_modal %}
+{% csrf_token %}
+<!-- Modal -->
+<div class="modal fade" id="sModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><span class="glyphicon glyphicon-user"></span> 登录</h4>
+      </div>
+      <form role="form" id="login-form">
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-2 col-xs-0"></div>
+          <div class="col-md-2 col-xs-4"><h5>用户名:</h5></div>
+          <div class="col-md-6 col-xs-8"><input class="form-control" type="text" placeholder="" name="sUsername"></div>
+          <div class="col-md-2 col-xs-0"></div>
+        </div>
+        <p></p>
+        <div class="row">
+          <div class="col-md-2 col-xs-0"></div>
+          <div class="col-md-2 col-xs-4"><h5>密码:</h5></div>
+          <div class="col-md-6 col-xs-8"><input class="form-control" type="password" placeholder="" name="sPassword"></div>
+          <div class="col-md-2 col-xs-0"></div>
+        </div>
+        <p></p>
+        <div class="row">
+          <div class="col-md-2 col-xs-0"></div>
+          <div class="col-md-8 col-xs-12">
+            <div name="sRespondS" class="alert alert-success">  
+              <a href="#" class="alert-link">...</a>
+            </div>
+          </div>
+          <div class="col-md-2 col-xs-0"></div>
+
+        </div>
+        <div class="row">
+          <div class="col-md-2 col-xs-0"></div>
+          <div class="col-md-8 col-xs-12">
+            <div name="sRespondD" class="alert alert-danger">  
+              <a href="#" class="alert-link">...</a>
+            </div>
+          </div>
+          <div class="col-md-2 col-xs-0"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" name="forget" data-loading-text="处理中...">忘记密码</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary"  name="sSubmit">登录!</button>
+        <input type="submit" style="position: absolute; left: -9999px"/>
+      </div>
+      </form>
+    </div><!-- /.modal-content -->  
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="rModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><span class="glyphicon glyphicon-tower"></span> 注册</h4>
+      </div>
+      <form role="form" id="signup-form">
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-2 col-xs-0"></div>
+          <div class="col-md-2 col-xs-4 "><h5>用户名:</h5></div>
+          <div class="col-md-6 col-xs-8 "><input class="form-control" type="text" placeholder="" name="rUsername"></div>
+          <div class="col-md-2 col-xs-0"></div>
+        </div>
+        <p></p>
+        <div class="row">
+          <div class="col-md-2 col-xs-0"></div>
+          <div class="col-md-2 col-xs-4"><h5>密码:</h5></div>
+          <div class="col-md-6 col-xs-8"><input class="form-control" type="password" placeholder="" name="rPassword"></div>
+          <div class="col-md-2 col-xs-0"></div>
+
+        </div>
+        <p></p>
+        <div class="row">
+          <div class="col-md-2 col-xs-0"></div>
+          <div class="col-md-2 col-xs-4"><h5>再输一次:</h5></div>
+          <div class="col-md-6 col-xs-8"><input class="form-control" type="password" placeholder="" name="rPassword2"></div>
+          <div class="col-md-2 col-xs-0"></div>
+        </div>
+        <p></p>
+        <div class="row">
+          <div class="col-md-2 col-xs-0"></div>
+          <div class="col-md-2 col-xs-4"><h5>邮箱:</h5></div>
+          <div class="col-md-6 col-xs-8"><input class="form-control" type="text" placeholder="" name="rEmail"></div>
+          <div class="col-md-2 col-xs-0"></div>
+
+        </div>
+        <p></p>
+        <div class="row">
+          <div class="col-md-2 col-xs-0"></div>
+          <div class="col-md-2 col-xs-4"><h5>昵称:</h5></div>
+          <div class="col-md-6 col-xs-8"><input class="form-control" type="text" placeholder="" name="rName"></div>
+          <div class="col-md-2 col-xs-0"></div>
+        </div>
+         <p></p>
+        <div class="row">
+          <div class="col-md-2 col-xs-0"></div>
+          <div class="col-md-8 col-xs-12">
+            <div name="rRespondS" class="alert alert-success">  
+              <a href="#" class="alert-link">...</a>
+            </div>
+          </div>
+          <div class="col-md-2 col-xs-0"></div>
+
+        </div>
+        <div class="row">
+          <div class="col-md-2 col-xs-0"></div>
+          <div class="col-md-8 col-xs-12">
+            <div name="rRespondD" class="alert alert-danger">  
+              <a href="#" class="alert-link">...</a>
+            </div>
+          </div>
+          <div class="col-md-2 col-xs-0"></div>
+
+        </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary"  name="rSubmit">注册!</button>
+        <input type="submit" style="position: absolute; left: -9999px"/>
+      </div>
+      </form>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+{% endblock login_fade_modal %}
+
+{% block nav_bar %}
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <a href="{% url 'library:index' %}" class="navbar-brand flavor size36" style="color:white;">Read Together</a>
+    </div>
+    <div class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+        <li class="{% block nav_index %}{% endblock nav_index %}">
+          <a href="{% url 'library:index' %}">首页</a>
+        </li>
+        <li class="{% block nav_rank %}{% endblock nav_rank %}">
+          <a href="{% url 'library:rank' %}">排行榜</a>
+          <!-- {% url 'library:rank' %} -->
+        </li>
+        <li class="{% block nav_info %}{% endblock nav_info %}">
+          <a href="{% url 'library:info' %}">公告板</a>
+        </li>
+      </ul>
+{% block nav_search %}
+      <ul class="nav navbar-nav">
+        <form class="navbar-form navbar-left" role="search" action="{% url 'library:search' %}" method="get">
+          <div class="form-group">
+            <input type="text" class="form-control" name="q" placeholder="在这里搜索感兴趣的书吧" value="{% block query_str %}{% endblock query_str %}">
+          </div>
+          <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+        </form>
+      </ul>
+{% endblock nav_search %}
+      <ul class="nav navbar-nav navbar-right">
+        <li class="{% block nav_user %}{% endblock nav_user %}">
+          {% if user.is_authenticated %}
+          <a href="{% url 'library:user' %}" >{{ user.myuser.name }}</a>
+          {% else %}
+          <a href="#" data-toggle="modal" data-target="#sModal">登录</a>
+          {% endif %}
+        </li>
+        <li>
+          {% if user.is_authenticated %}
+          <a href="#" name="logout">登出</a>
+          {% else %}
+          <a href="#" data-toggle="modal" data-target="#rModal">注册</a>
+          {% endif %}
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock nav_bar %}
+
+    {% block main %}
+    {% endblock main %}
+
+{% block pagetail %}
+<div class="container">
+  <div class="row">
+<div id="footer"><span style="float:left"> © 2014 ReadAge. All rights reserved</span><span style="float:right"><button type="button" class="btn btn-success btn-xs" data-toggle="modal" data-target="#contact-us">联系我们</button></span></div>
+</div></div>
+
+<!-- Modal -->
+<div class="modal fade" id="contact-us" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><span class="glyphicon glyphicon-tower"></span> 联系我们</h4>
+      </div>
+      <form class="form-horizontal" role="form" method="post" action="{% url 'library:feedback' %}" id="modal-feedback-form">
+      <div class="modal-body">
+        <span class="help-block">如果您找不到书籍、图书馆服务或者对我们的网站有任何建议。欢迎向我们提出来。</span>
+        <div class="form-group">
+          <label for="inputEmail3" class="col-sm-2 control-label">Title</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="title" placeholder="Title">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputPassword3" class="col-sm-2 control-label">Feed Back</label>
+          <div class="col-sm-10">
+            <textarea class="form-control" rows="7" name="content" placeholder="Feed Back"></textarea>
+          </div>
+        </div>
+        {% csrf_token %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="submit" class="btn btn-primary" data-loading-text="正在提交中请勿离开页面..." data-complete-text="出错了～请再尝试一次提交">提交</button>
+      </div>
+      </form>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+{% endblock pagetail %}
+
+
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="{% static 'jquery-2.0.3.min.js' %}"></script>
+  <script src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $("[name='sRespondD']").hide();
+      $("[name='sRespondS']").hide();
+      $("[name='rRespondD']").hide();
+      $("[name='rRespondS']").hide();
+      $("[name='sSubmit']").click(function(){
+        $.post("{% url 'library:login' %}",
+          {
+            username: $("[name='sUsername']").val(),
+            password: $("[name='sPassword']").val(),
+            csrfmiddlewaretoken: $("[name=csrfmiddlewaretoken]").val()
+          },
+        function(res){
+            var Obj = $.parseJSON(res);//转换为json对象   
+            if(Obj.status=="OK")
+            {
+                $("[name='sRespondD']").hide();
+                $("[name='sRespondS']").show();
+                $("[name='sRespondS']").text(Obj.status+": 欢迎回来～ "+Obj.username);
+                setTimeout(
+                  function(){
+                    location.reload();
+                  },
+                  1000
+                );
+
+            }
+            else if(Obj.err=="Login failed.")
+            {
+                $("[name='sRespondS']").hide();
+                $("[name='sRespondD']").show();
+                $("[name='sRespondD']").text(Obj.status+": 用户名与密码不匹配");
+            }
+            else if(Obj.err=="Root cannot login here.")
+            {
+                $("[name='sRespondS']").hide();
+                $("[name='sRespondD']").show();
+                $("[name='sRespondD']").text(Obj.status+": "+Obj.err);
+            }
+            else
+            {
+                $("[name='sRespondS']").hide();
+                $("[name='sRespondD']").show();
+                $("[name='sRespondD']").text(Obj.status+": 请输入");
+                $.each(Obj.detail,function(key,value){
+                  $("[name='sRespondD']").append(" " + key );
+                })
+            }
+        });
+      });
+
+      $("[name='rSubmit']").click(function(){
+        $.post("{% url 'library:register' %}",
+          {
+            username: $("[name='rUsername']").val(),
+            password: $("[name='rPassword']").val(),
+            password2: $("[name='rPassword2']").val(),
+            email: $("[name='rEmail']").val(),
+            name: $("[name='rName']").val(),
+            csrfmiddlewaretoken: $("[name=csrfmiddlewaretoken]").val()
+          },
+        function(res){
+            var Obj = $.parseJSON(res); 
+            if(Obj.status=="OK")
+            {
+                $("[name='rRespondD']").hide();
+                $("[name='rRespondS']").show();
+                $("[name='rRespondS']").text(Obj.status+": 欢迎来到我们的网站～"+Obj.username);
+                
+                setTimeout(
+                  function(){
+                    location.reload();
+                  },
+                  1000
+                );
+            }
+            else if(Obj.detail)
+            {
+              if(Obj.detail.password2=="Passwords not match.")
+              {
+                  $("[name='rRespondS']").hide();
+                  $("[name='rRespondD']").show();
+                  $("[name='rRespondD']").text(Obj.status+": 密码不匹配");
+              }
+              else if(Obj.detail.password&&Obj.detail.password!="This field is required.")
+              {
+                  $("[name='rRespondS']").hide();
+                  $("[name='rRespondD']").show();
+                  $("[name='rRespondD']").text(Obj.status+": 密码过短 "+Obj.detail.password);
+              }
+              else if(Obj.detail.email=="Enter a valid email address.")
+              {
+                  $("[name='rRespondS']").hide();
+                  $("[name='rRespondD']").show();
+                  $("[name='rRespondD']").text(Obj.status+": 请输入合法的邮箱地址");
+              }
+              else
+              {
+                  $("[name='rRespondS']").hide();
+                  $("[name='rRespondD']").show();
+                  $("[name='rRespondD']").text(Obj.status+": 请输入");
+                  $.each(Obj.detail,function(key,value){
+                    $("[name='rRespondD']").append(" " + key ); 
+                  })
+              }
+            }
+            else
+            {
+                $("[name='rRespondS']").hide();
+                $("[name='rRespondD']").show();
+                $("[name='rRespondD']").text(Obj.status+": "+Obj.err);
+            }
+        });
+      });
+
+
+
+      $("[name='forget']").click(function(){
+        $("[name='forget']").button('loading');
+        $.post("{% url 'library:user_forget' %}",
+          {
+            username: $("[name='sUsername']").val(),
+            csrfmiddlewaretoken: $("[name=csrfmiddlewaretoken]").val()
+          },
+        function(res){
+            var Obj = $.parseJSON(res); 
+            if(Obj.status=="OK")
+            {
+                $("[name='sRespondD']").hide();
+                $("[name='sRespondS']").show();
+                $("[name='sRespondS']").text(Obj.status+": "+Obj.message);
+                
+                
+            }
+            else
+            {
+                $("[name='sRespondS']").hide();
+                $("[name='sRespondD']").show();
+                $("[name='sRespondD']").text(Obj.status+": "+Obj.message);
+            }
+            $("[name='forget']").button('reset');
+        });
+      });
+
+      $("[name='logout']").click(function(){
+        $.get("{% url 'library:logout' %}",     
+          function(){
+            location.reload();
+            //alert('您已成功登出！');            
+        });
+      });
+
+      $('#login-form').submit(function(e){
+        e.preventDefault();
+        console.log('test sSubmit');
+        $("[name='sSubmit']").click();
+      });
+    
+      $('#signup-form').submit(function(e){
+        e.preventDefault();
+        console.log('test rSubmit');
+        $("[name='rSubmit']").click();
+      });
+
+      $('#sModal').on('shown.bs.modal', function (e) {
+        // do something...
+        $("[name='sUsername']").focus();
+      });
+
+      $('#rModal').on('shown.bs.modal', function (e) {
+        // do something...
+        $("[name='rUsername']").focus();
+      });
+
+      $("[name='q']").focus();
+
+
+      $('#modal-feedback-form [type="submit"]').button();
+
+      $('#modal-feedback-form').submit(function(e){
+        e.preventDefault();
+        $('#modal-feedback-form [type="submit"]').button('loading');
+        var editurl = $(this).attr('action');
+        var title = $('#modal-feedback-form [name="title"]').val();
+        var content = $('#modal-feedback-form [name="content"]').val();
+
+        csrftoken = getCookie('csrftoken');
+        $.post(
+          editurl,
+          {
+            'csrfmiddlewaretoken' : csrftoken,
+            'title' : title,
+            'content' : content,
+          },
+          function(data){
+            console.log('get modal-feedback-form data: ' + data);
+            var obj = $.parseJSON(data);
+            if(obj.status == 'Error'){
+              alert('噢哟！ 提交失败！' + 'Error: ' + obj.err + (obj.message?(' Message: ' + obj.message):""));
+              $('#modal-feedback-form [type="submit"]').button('complete');
+            } else if(obj.status == 'OK'){
+              alert('问询单提交成功！有新消息我们将会及时与您联系！');
+              location.reload();
+            }
+          }
+        );
+      });
+
+
+  });
+  </script>
+
+  <script type="text/javascript">
+  function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+  }
+
+  var csrftoken = null;
+
+  </script>
+ 
+  {% block define_js %}
+  {% endblock define_js %}
+  
+  </body>
+</html>

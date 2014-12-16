@@ -1,0 +1,146 @@
+{% extends 'library/base.html' %}
+{% load staticfiles %}
+
+{% block define_head %}
+  <title>ReadTogether 图书馆</title>
+  <meta name="description" content="Index">
+  <meta name="author" content="Qt">
+  <link rel="shortcut icon" href="{% static 'library/img/favicon.ico' %}">
+{% endblock define_head %}
+
+{% block define_CSS %}
+  <!-- Custom styles for this template -->
+  <link href="{% static 'library/common-qt.css' %}" rel="stylesheet">
+  <link href="{% static 'library/common-qt-index.css' %}" rel="stylesheet">
+{% endblock define_CSS %}
+
+{% block nav_search %}
+{% endblock nav_search %}
+{% block nav_index %}active{% endblock nav_index %}
+{% block main %}
+<div class="container">
+  <div class="row maglg">
+    <div class="col-lg-3 col-md-2 col-sm-1 col-xs-0"></div>
+    <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12"><img src="{% static 'library/img/index_logo.jpg' %}" class="img-responsive" alt="Responsive image"></div>
+    <div class="col-lg-3 col-md-2 col-sm-1 col-xs-0"></div>
+  </div>
+  <form action="{% url 'library:search' %}" method="get">
+    <div class="row magxs">
+      <div class="col-lg-2 col-md-1 col-sm-1 col-xs-0"></div>
+      <div class="col-lg-8 col-md-10 col-sm-10 col-xs-12"><input class="form-control" type="text" placeholder="生活里没有书籍，就好象没有阳光，智慧里没有书籍，就好象鸟儿没有翅膀。———莎士比亚" name="q"></div>
+      <div class="col-lg-2 col-md-1 col-sm-1 col-xs-0"></div>
+    </div>
+
+    <div class="row magmd">
+      <div class="col-lg-4 col-md-3 col-sm-3 col-xs-0"></div>
+      <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6"><button type="submit" class="flavor size26 btn btn-xs btn-primary btn-block">Search book</button></div>
+      
+      <div class="col-lg-2 col-md-3 col-sm-3  col-xs-6"><button type="submit" name="lucky" class="flavor size26 btn btn-xs btn-primary btn-block" >RP booming</button></div><!--title="oops......>_< " data-content="this function is still in the brain!"-->
+      <div class="col-lg-4 col-md-3 col-sm-3  col-xs-0"></div>
+    </div>
+  </form>
+</div>
+
+<div class="container magword">
+<div class="row">
+  <div class="col-lg-4 col-md-4 col-sm-4  col-xs-12">
+    <div class="alert alert-danger">
+      <table class="table table-hover">
+        <thead>
+           <tr>
+            <th></th>
+            <th>
+              <div class="row"> 
+                <div class="col-xs-6 ">
+                  排行榜
+                </div>
+                <div class="col-xs-6 text-right">
+                  <a href="{% url 'library:rank' %}"><div class="maghot"><span class="label label-danger"><em>更多榜单!!</em></span></div></a>
+              </div>
+            </th>
+                       
+          </tr>
+        </thead>
+        <tbody>
+	      {% for item in rank %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>
+              <div class="row"> 
+                <div class="col-lg-10 col-md-8 col-sm-8  col-xs-9">
+                  <a href="{% url 'library:book' item.book.id %}">{{ item.book.simple_name|truncatewords:7 }}</a>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-4 col-xs-3 text-right">
+                  {{ item.value|floatformat:1 }}
+                </div>
+              </div>
+            </td>
+            
+          </tr>
+        {% empty %}
+          <tr><td></td><td>No content.</td><td></td><td></td></tr>
+      	{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-lg-4 col-md-4 col-sm-4  col-xs-12">
+    <div class="alert alert-warning">
+      <table class="table table-hover magword">
+        <thead>
+          <tr>
+            <th></th>
+            <th>新闻</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+	      {% for item in news %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td><a href = "{% url 'library:info_detail' item.id %}">{{ item.title }}</a></td>
+            <td>{{ item.date|date:"F j, Y"}}</td>
+          </tr>
+        {% empty %}
+          <tr><td>No content.</td></tr>
+      	{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-lg-4 col-md-4 col-sm-4  col-xs-12">
+    <div class="alert alert-success">
+      <table class="table table-hover magword">
+        <thead>
+          <tr>
+            <th></th>
+            <th>用户指南</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+	      {% for item in guide %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td><a href = "{% url 'library:info_detail' item.id %}">{{ item.title }}</a></td>
+            <td>{{ item.date|date:"F j, Y"}}</td>
+          </tr>
+        {% empty %}
+          <tr><td>No content.</td></tr>
+      	{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-xs-4 "></div>
+</div>
+</div>
+
+
+{% endblock main %}
+
+{% block define_js %}
+  <script type="text/javascript">
+    $('.btn').popover();
+  </script>
+{% endblock define_js %}

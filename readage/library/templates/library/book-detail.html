@@ -1,0 +1,706 @@
+{% extends 'library/base.html' %}
+{% load staticfiles %}
+
+{% block define_head %}
+	<title>{{ book.simple_name }} - Detail info - ReadTogether</title>
+	<meta name="description" content="Detail info">
+	<meta name="author" content="Fu Zuoyou">
+	<link rel="shortcut icon" href="{% static 'library/img/favicon.ico' %}">
+{% endblock define_head %}
+
+{% block define_CSS %}
+	<!-- Custom styles for this template -->
+	<link href="{% static 'library:book-detail.css' %}" rel="stylesheet">
+{% endblock define_CSS %}
+
+{% block main %}
+	<div id="para" is_admin="{{ is_book_admin }}"></div>
+	<div class="container">
+
+	  <div class="starter-template">
+		<h2>{{ book.simple_name }}<small> - {{ book.simple_version }}</small></h2>
+		<!-- <p class="lead"></p> -->
+	  </div>
+	
+	</div><!-- /.container -->
+	
+	<div class="container">
+	  <!-- <h3>Harry Potter - The Philosopher Stone</h3> -->
+	  <div class="panel panel-default">
+		  <div class="panel-heading">
+		  	
+			<span class="glyphicon glyphicon-book"></span> 书籍信息
+			{% if is_book_admin %}
+			<button type="button" class="btn btn-default btn-xs"  data-toggle="modal" data-target="#fixbookinfo" style="float:right;">修改信息</button>
+			{% endif %}
+		  </div>
+		  <div class="panel-body">
+			<ul class="media-list signle-item">
+			  <li class="media">
+				<div class="pull-left">
+					<a  href="#">
+					  <img class="media-object" src="http://placekitten.com/{{ book.id|add:"80" }}/{{ book.id|add:"120" }}" alt="book-cover">
+					</a>
+				</div>
+				<div class="media-body">
+				  <!-- <h4 class="media-heading">Media heading</h4> -->
+				  <div class="row">
+					<div class="col-md-8 col-sm-8 col-xs-12">
+						<div class="book-info">
+							{% if book.title %}
+								<span class="displayk">标准名:</span>
+								<span class="displayv">{{ book.title }}</a></span>
+								<br>
+							{% endif %}
+
+							{% if book.author %}
+								<span class="displayk">作者:</span>
+								<span class="displayv"><a href="{% url 'library:search' %}?q={{ book.author }}" target="_blank">{{ book.author }}</a></span>
+								<br>
+							{% endif %}							
+							
+							{% if book.press %}
+								<span class="displayk">出版社:</span>
+								<span class="displayv"><a href="{% url 'library:search' %}?q={{ book.press }}" target="_blank">{{ book.press }}</a></span>
+							<br>
+							{% endif %}
+
+							{% if book.title_other %}
+								<span class="displayk">外文原名:</span>
+								<span class="displayv"><a href="{% url 'library:search' %}?q={{ book.title_other }}" target="_blank">{{ book.title_other }}</a></span>
+							<br>
+							{% endif %}
+
+							{% if book.pub_year_origin %}
+							<span class="displayk">原版出版年:</span>
+							<span class="displayv">{{ book.pub_year_origin }}</span>
+							<br>
+							{% endif %}
+
+							{% if book.revision_origin %}
+							<span class="displayk">原版版次:</span>
+							<span class="displayv">{{ book.revision_origin }}</span>
+							<br>
+							{% endif %}							
+							
+							{% if book.translator %}
+								<span class="displayk">译者:</span>
+								<span class="displayv">{{ book.translator }}</span>
+							<br>
+							{% endif %}
+							
+							{% if book.pub_year %}
+							<span class="displayk">出版年:</span>
+							<span class="displayv">{{ book.pub_year }}</span>
+							<br>
+							{% endif %}
+
+							{% if book.revision %}
+							<span class="displayk">版次:</span>
+							<span class="displayv">第 {{ book.revision }} 版</span>
+							<br>
+							{% endif %}
+
+							{% if book.type %}
+							<span class="displayk">书籍分类:</span>
+							<span class="displayv">{{ book.type }}</span>
+							<br>
+							{% endif %}							
+
+							{% if book.ISBN %}
+							<span class="displayk">ISBN:</span>
+							<span class="displayv">{{ book.ISBN }}</span>
+							{% endif %}
+						</div>
+						<!--
+						<div class="book-info-edit">
+							meow
+						</div>
+						-->
+					</div>
+					
+					<div class="col-md-3 col-sm-4 col-xs-12">
+						<div class="panel panel-default rate-star-panel">
+						<div class="panel-body">
+						<ul class="list-unstyled">
+							<li>评分：</li>
+							<li class="big-star">
+								{% for i in range5 %}{% if forloop.counter <= book.rate %}<span class="glyphicon glyphicon-star"></span>{% else %}<span class="glyphicon glyphicon-star-empty"></span>{% endif %}{% endfor %}
+								<span class="rate-score">{{ book.rate|floatformat:1 }}</span>
+							</li>
+							<!-- 5 rate data -->
+							<!--
+							<li class="small-star">
+								<span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span>
+								<span class="glyphicon rate-bar" style="width:10px;"></span>
+								<span class="rate-per">17.0%</span>
+							</li>
+							<li class="small-star">
+								<span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star-empty"></span>
+								<span class="glyphicon rate-bar" style="width:16px;"></span>
+								<span class="rate-per">22.0%</span>
+							</li>
+							<li class="small-star">
+								<span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star-empty"></span><span class="glyphicon glyphicon-star-empty"></span>
+								<span class="glyphicon rate-bar" style="width:7px;"></span>
+								<span class="rate-per">19.0%</span>
+							</li>
+							<li class="small-star">
+								<span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star-empty"></span><span class="glyphicon glyphicon-star-empty"></span><span class="glyphicon glyphicon-star-empty"></span>
+								<span class="glyphicon rate-bar" style="width:2px;"></span>
+								<span class="rate-per">1.0%</span>
+							</li>
+							<li class="small-star">
+								<span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star-empty"></span><span class="glyphicon glyphicon-star-empty"></span><span class="glyphicon glyphicon-star-empty"></span><span class="glyphicon glyphicon-star-empty"></span>
+								<span class="glyphicon rate-bar" style="width:1px;"></span>
+								<span class="rate-per">1.0%</span>
+							</li>
+							-->
+							
+						</ul>
+						</div>
+						</div>
+						
+						<!--
+						<div class="panel panel-default">
+						<div class="panel-body">
+							<button type="button" class="btn btn-default btn-xs">预约</button>
+						</div>
+						</div>
+						-->
+					</div>
+				  </div>
+				</div>
+			  </li>
+			</ul>
+		  </div>
+		</div>
+	</div>
+	
+	<div class="container">
+	    <div class="panel panel-default">
+		  <!-- Default panel contents -->
+		  <div class="panel-heading"><span class="glyphicon glyphicon-tasks"></span> 书籍状态</div>
+		  <div class="panel-body">
+		  	{% if copy and copy|length > 0 or is_book_admin %}
+			
+			当前馆藏 <strong>{{ copy|length }}</strong> 本。
+            
+
+            <span class="displayv"><a href="/reader/{{ book.id }}" target="_blank"> 在线阅读 </a></span>
+
+		  </div>
+
+		  <!-- Table -->
+		  <div class="table-responsive">
+		  <table class="table table-hover "> <!-- table-bordered? -->
+			   <thead>
+				<tr>
+				  <th>馆藏地点</th>
+				  <th>可借期限</th>
+				  <th>馆藏状态</th>
+				  <th>操作</th>
+				</tr>
+			  </thead>
+			  <tbody>
+			  	{% for item in copy %}
+			  	{% if item.get_status.text == 'on shelf' %}
+			  	<!-- ready -->
+			  	<tr class="success">
+				  <td>{{ item.location }}</td>
+				  <td>{{ item.book.duartion }}</td>
+				  <td>在架上</td>
+				  <td>
+				  	{% if is_book_admin %}
+				  	<button type="button" class="btn btn-danger btn-xs btn-xj" passurl="{% url 'library:copy_del' item.id %}" >下架</button>
+				  	{% endif %}
+				  	<button type="button" class="btn btn-default btn-xs " disabled="disabled">不可预约</button>
+				  	
+				  </td>
+				</tr>
+			  	{% elif item.get_status.text == 'borrowing' %}
+			  	<!-- un-returned -->
+			  	<tr class="warning">
+				  <td>{{ item.location }}</td>
+				  <td>{{ item.id }}</td>
+				  <td>{{ item.book.duartion }}</td>
+				  <td>已借出（将在 <strong>{{ item.get_status.expire|date:"Y-m-d" }} </strong>到期{% if item.get_status.outdated %} <strong>超期未归还</strong>{% endif %}{% if item.get_status.queue != 0 %} +{{ item.get_status.queue }} 已预约 {% endif %}）</td>
+				  <td>
+				  	<button type="button" class="btn btn-success btn-xs" onclick="callording(this, {{ item.id }})" myurl="{% url 'library:queue' item.id %}">预约</button>
+				  	
+				  </td>
+				</tr>
+			  	{% elif item.get_status.text == 'disappear' %}
+			  	<!-- over time -->
+			  	<tr class="danger">
+				  <td>{{ item.location }}</td>
+				  <td>{{ item.id }}</td>
+				  <td>{{ item.book.duartion }}</td>
+				  <td>已丢失</td>
+				  <td><button type="button" class="btn btn-default btn-xs" disabled="disabled">丢失中不可预约</button></td>
+				</tr>
+			  	{% elif item.get_status.text == 'arranging' %}
+			  	<!-- arranging -->
+			  	<tr class="default">
+				  <td>{{ item.location }}</td>
+				  <td>{{ item.id }}</td>
+				  <td>{{ item.book.duartion }}</td>
+				  <td>正在整理中</td>
+				  <td>
+				  	{% if is_book_admin %}
+				  	<button type="button" class="btn btn-danger btn-xs btn-xj" passurl="{% url 'library:copy_del' item.id %}">下架</button>
+				  	{% endif %}
+				  	<button type="button" class="btn btn-default btn-xs" disabled="disabled">不可预约</button>
+				  	
+				  </td>
+				</tr>
+				{% elif item.get_status.text == 'dead' %}
+
+			  	{% else %}
+			  	<tr>
+					<td>it's impossible! Book status error!</td>
+					<td>({{item.get_status.text}})</td>
+					<td>({{item.id}})</td>
+				</tr>
+			  	{% endif %}
+				{% empty %}
+				<tr>
+					<td>Copy list is empty now</td>
+				</tr>
+				{% endfor %}
+				{% if is_book_admin %}
+				<tr class="primary">
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>
+						<input type="text" class="form-control " id="loc" placeholder="请输入馆藏地点">
+					</td>
+					<td>
+						
+					  	<button type="button" class="btn btn-primary btn-xs btn-sj" passurl="{% url 'library:copy_add' book.id %} " >添加拷贝</button>
+					  	
+					</td>
+				</tr>
+				{% endif %}
+				</tr>
+			  </tbody>
+		  </table>
+		  </div> <!-- end of table -->
+
+		{% else %}
+			噢哟，该书暂无馆藏。您可以填写下面的咨询表单来联系管理员，申请购买该图书或提出更进一步的意见 ;-)
+			<img src="{% static 'library/img/xiaohei-lying.jpg' %}" class="img-responsive center-img" alt="Please login">
+		{% endif %}
+
+		</div>
+	</div><!-- /.container -->
+
+	<!-- Modal -->
+	<div class="modal fade" id="ordingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	        <h4 class="modal-title" id="myModalLabel"><span class="glyphicon glyphicon-tag"></span> 预约确认</h4>
+	      </div>
+	      <div class="modal-body">
+	        <p>您要预约 ID: <strong id="book-id-info"></strong> 这本书么？</p>
+	        <p>书籍归还之后我们将会通知您，届期请注意查收通知邮件。</p>
+	        <div class="panel panel-default">
+	        	<div class="panel-body" id="ording-info">
+	        	</div>
+	        </div>
+	        <p><div class="alert alert-success">预约成功～！</div>
+	        <div class="alert alert-danger">噢哟～预约失败！<strong id="detailed-alert"></strong></div></p>
+	        <input type="hidden" id="ording-book-id" value="">
+	        {% csrf_token %}
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">放弃</button>
+	        <button type="button" class="btn btn-primary" id="ording-button">确认预约</button>
+	      </div>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+	
+	
+	 <div class="container">
+		<div class="panel panel-default comment-widget">
+		<div class="panel-heading">
+			<span class="glyphicon glyphicon-comment"></span> 书评
+			<span class="label label-info" >{{ comment_count }} 条</span>
+			<button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#makemycomment" style="float:right;">我也要评论</button>
+		</div>
+		<div class="panel-body" id="comment-panel">
+			<!--
+			<ul class="list-group" id="comment-group">
+				<li class="list-group-item">
+					<div class="row">
+						<div class="col-xs-2 col-md-1">
+							<img src="http://placehold.it/80" class="img-circle img-responsive" alt="" /></div>
+						<div class="col-xs-10 col-md-11">
+							<div>
+								<a href="http://www.jquery2dotnet.com/2013/10/google-style-login-page-desing-usign.html">
+									Google Style Login Page Design Using Bootstrap</a>
+								<div class="mic-info">
+									By: <a href="#">Bhaumik Patel</a> on 2 Aug 2013
+								</div>
+							</div>
+							<div class="comment-text">
+								Awesome design
+							</div>
+							<div class="action">
+								<button type="button" class="btn btn-primary btn-xs" title="Edit">
+									<span class="glyphicon glyphicon-pencil"></span>
+								</button>
+								<button type="button" class="btn btn-success btn-xs" title="Approved">
+									<span class="glyphicon glyphicon-ok"></span>
+								</button>
+								<button type="button" class="btn btn-danger btn-xs" title="Delete">
+									<span class="glyphicon glyphicon-trash"></span>
+								</button>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row">
+						<div class="col-xs-2 col-md-1">
+							<img src="http://placehold.it/80" class="img-circle img-responsive" alt="" /></div>
+						<div class="col-xs-10 col-md-11">
+							<div>
+								<a href="http://bootsnipp.com/BhaumikPatel/snippets/Obgj">Admin Panel Quick Shortcuts</a>
+								<div class="mic-info">
+									By: <a href="#">Bhaumik Patel</a> on 11 Nov 2013
+								</div>
+							</div>
+							<div class="comment-text">
+								Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+								euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim
+							</div>
+							<div class="action">
+								<button type="button" class="btn btn-primary btn-xs" title="Edit">
+									<span class="glyphicon glyphicon-pencil"></span>
+								</button>
+								<button type="button" class="btn btn-success btn-xs" title="Approved">
+									<span class="glyphicon glyphicon-ok"></span>
+								</button>
+								<button type="button" class="btn btn-danger btn-xs" title="Delete">
+									<span class="glyphicon glyphicon-trash"></span>
+								</button>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row">
+						<div class="col-xs-2 col-md-1">
+							<img src="http://placehold.it/80" class="img-circle img-responsive" alt="" /></div>
+						<div class="col-xs-10 col-md-11">
+							<div>
+								<a href="http://bootsnipp.com/BhaumikPatel/snippets/4ldn">Cool Sign Up</a>
+								<div class="mic-info">
+									By: <a href="#">Bhaumik Patel</a> on 11 Nov 2013
+								</div>
+							</div>
+							<div class="comment-text">
+								Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+								euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim
+							</div>
+							<div class="action">
+								<button type="button" class="btn btn-primary btn-xs" title="Edit">
+									<span class="glyphicon glyphicon-pencil"></span>
+								</button>
+								<button type="button" class="btn btn-success btn-xs" title="Approved">
+									<span class="glyphicon glyphicon-ok"></span>
+								</button>
+								<button type="button" class="btn btn-danger btn-xs" title="Delete">
+									<span class="glyphicon glyphicon-trash"></span>
+								</button>
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+			-->
+			<a href="{% url 'library:ajax_comment' book.id  %}" class="btn btn-default btn-sm btn-block scroll-next" role="button"><span class="glyphicon glyphicon-refresh"></span> Load More</a>
+		</div>
+	  </div>
+	  </div>
+	  
+	  
+	  <!-- Modal -->
+		<div class="modal fade" id="makemycomment" tabindex="-1" role="dialog" aria-labelledby="makemycomment-Label" aria-hidden="true">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="makemycomment-Label"><span class="glyphicon glyphicon-pencil"></span> 撰写我的书评</h4>
+			  </div>
+			  <div class="modal-body">
+				
+				<form class="form-horizontal" role="form" id="makemycomment-form">
+				  <div class="form-group">
+					<label for="inputTitle" class="col-sm-2 control-label">标题</label>
+					<div class="col-sm-10">
+					  <input type="text" class="form-control" id="input-comment-title" placeholder="给评论取个标题吧=w=">
+					</div>
+				  </div>
+				  <div class="form-group">
+					<label for="inputRate" class="col-sm-2 control-label">评分</label>
+					<div class="col-sm-10">
+						<label class="radio-inline">
+						  <input type="radio" name="optionsRadios" id="inlineRadio5" value="5"> <span class="label label-danger">力荐</span>
+						</label>
+						<label class="radio-inline">
+						  <input type="radio" name="optionsRadios" id="inlineRadio4" value="4"> <span class="label label-primary">推荐</span>
+						</label>
+						<label class="radio-inline">
+						  <input type="radio" name="optionsRadios" id="inlineRadio3" value="3"><span class="label label-success">一般</span>
+						</label>
+						<label class="radio-inline">
+						  <input type="radio" name="optionsRadios" id="inlineRadio2" value="2"> <span class="label label-warning">较差</span>
+						</label>
+						<label class="radio-inline">
+						  <input type="radio" name="optionsRadios" id="inlineRadio1" value="1"> <span class="label label-default">糟糕</span>
+						</label>
+					</div>
+				  </div>
+				  <div class="form-group">
+					<label for="input-comment" class="col-sm-2 control-label">评论</label>
+					<div class="col-sm-10">
+					  <textarea class="form-control" rows="8" id="input-comment" placeholder="写点什么好呢…"></textarea>
+					</div>
+				  </div>
+				  <div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+					  <div class="checkbox">
+						<label>
+						  <input type="checkbox" id="isSpoiler"> 有关键情节透露&gt; &lt;
+						</label>
+					  </div>
+					</div>
+				  </div>
+				  <input type="hidden" id="input-comment-url" value="{% url 'library:comment' book.id %}">
+				</form>
+
+				<div class="alert alert-danger alert-dismissable hidden" id="makemycomment-warning">
+				  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				  <div>噢哟！[ <strong></strong> ]您还没有填写哟！</div>
+				</div>
+
+				<div class="alert alert-success hidden" id="makemycomment-success">
+					哟吼！您的评论已成功发布！
+				</div>
+				
+			  </div>
+			  <div class="modal-footer">
+			  （不刷新页面内容是不会丢失的，可以回来继续编辑）
+				<button type="button" class="btn btn-default" data-dismiss="modal" data-toggle="tooltip" title="（不刷新页面内容是不会丢失的，可以回来继续编辑）">关闭</button>
+				<button type="button" class="btn btn-primary" id="makemycomment-submit">好了，添加评论</button>
+			  </div>
+			</div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+
+		<!-- Modal -->
+		<div class="modal fade" id="fixbookinfo" tabindex="-1" role="dialog" aria-labelledby="fixbookinfo-Label" aria-hidden="true">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="fixbookinfo-Label"><span class="glyphicon glyphicon-pencil"></span> 纠正书籍信息</h4>
+			  </div>
+			  <div class="modal-body">
+				<form class="form-horizontal" role="form" id="fixbookinfo-form">
+				  
+				  <div class="form-group">
+					<label for="inputTitle" class="col-sm-3 control-label">标准名</label>
+					<div class="col-sm-9">
+					  <input type="text" class="form-control" placeholder="标准名" id="title" value="{% if book.title %}{{ book.title }}{% endif %}">
+					</div>
+				  </div>
+				  
+
+
+				  <div class="form-group">
+					<label for="inputTitle" class="col-sm-3 control-label">外文原名</label>
+					<div class="col-sm-9">
+					  <input type="text" class="form-control" placeholder="外文原名" id="title_other" value="{% if book.title_other %}{{ book.title_other }}{% endif %}">
+					</div>
+				  </div>
+				  
+
+				  
+				  <div class="form-group">
+					<label for="inputTitle" class="col-sm-3 control-label">作者</label>
+					<div class="col-sm-9">
+					  <input type="text" class="form-control" placeholder="作者" id="author" value="{% if book.author %}{{ book.author }}{% endif %}">
+					</div>
+				  </div>
+				  
+
+				    <div class="form-group">
+					<label for="inputTitle" class="col-sm-3 control-label">译者</label>
+					<div class="col-sm-9">
+					  <input type="text" class="form-control" placeholder="译者" id="translator" value="{% if book.translator %}{{ book.translator }}{% endif %}">
+					</div>
+				  </div>
+				  
+
+
+				  <div class="form-group">
+					<label for="inputTitle" class="col-sm-3 control-label">出版社</label>
+					<div class="col-sm-9">
+					  <input type="text" class="form-control" placeholder="出版社" id="press" value="{% if book.press %}{{ book.press }}{% endif %}">
+					</div>
+				  </div>
+				  
+
+				 
+
+
+				  <div class="form-group">
+					<label for="inputTitle" class="col-sm-3 control-label">出版年</label>
+					<div class="col-sm-9">
+					  <input type="text" class="form-control" placeholder="出版年" id="pub_year" value="{% if book.pub_year %}{{ book.pub_year }}{% endif %}">
+					</div>
+				  </div>
+				  
+
+				  
+				  <div class="form-group">
+					<label for="inputTitle" class="col-sm-3 control-label">原版出版年</label>
+					<div class="col-sm-9">
+					  <input type="text" class="form-control" placeholder="原版出版年" id="pub_year_origin" value="{% if book.pub_year_origin %}{{ book.pub_year_origin }}{% endif %}">
+					</div>
+				  </div>
+				  
+
+				   
+				  <div class="form-group">
+					<label for="inputTitle" class="col-sm-3 control-label">版次</label>
+					<div class="col-sm-9">
+					  <input type="number" class="form-control" placeholder="版次" id="revision" value="{% if book.revision %}{{ book.revision }}{% endif %}">
+					</div>
+				  </div>
+				  
+
+
+				  <div class="form-group">
+					<label for="inputTitle" class="col-sm-3 control-label">原版版次</label>
+					<div class="col-sm-9">
+					  <input type="text" class="form-control" placeholder="原版版次" id="revision_origin" value="{% if book.revision_origin %}{{ book.revision_origin }}{% endif %}">
+					</div>
+				  </div>
+				  
+
+				  		
+
+				 
+				  
+				  <div class="form-group">
+					<label for="inputTitle" class="col-sm-3 control-label"> 借书期限</label>
+					<div class="col-sm-9">
+					  <input type="text" class="form-control" placeholder=" 借书期限" id="duration" value="{% if book.duartion %}{{ book.duartion }}{% endif %}">
+					</div>
+				  </div>
+				  
+
+				  
+				  <div class="form-group">
+					<label for="inputTitle" class="col-sm-3 control-label">ISBN</label>
+					<div class="col-sm-9">
+					  <input type="text" class="form-control" placeholder="ISBN" id="ISBN" value="{% if book.ISBN %}{{ book.ISBN }}{% endif %}">
+					</div>
+				  </div>
+				  <div class="row">
+				  <div class="col-sm-3"></div>
+				  <div class="col-sm-9">
+				  <div id="super-body"></div>
+					</div>
+				</div>
+				</form>
+
+				<div class="alert alert-danger alert-dismissable hidden" id="fixbookinfo-warning">
+				  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				  噢哟！有一个地方[ <strong></strong> ]您还没有填写哟！
+				</div>
+				
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal" data-toggle="tooltip" title="（不刷新页面内容是不会丢失的，可以回来继续编辑）">关闭</button>
+				<button type="button" class="btn btn-primary" id="super-submit">好了，快改过来吧</button>
+				
+			  </div>
+			</div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+
+{% endblock main %}
+
+{% block define_js %}
+	<script src="{% static 'library:book-detail.js' %}"></script>
+	<script src="{% static 'jquery.jscroll.js' %}"></script>
+	<script type="text/javascript">
+	function getCookie(name) {
+		var cookieValue = null;
+		if (document.cookie && document.cookie != '') {
+		    var cookies = document.cookie.split(';');
+		    for (var i = 0; i < cookies.length; i++) {
+		        var cookie = jQuery.trim(cookies[i]);
+		        // Does this cookie string begin with the name we want?
+		        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+		            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+		            break;
+		        }
+		    }
+		}
+		return cookieValue;
+	}
+
+	var csrftoken = null;
+
+	</script>
+	<script type="text/javascript">
+	
+
+
+	$("#super-submit").click(function(){
+        $.post("{% url 'library:book_edit' book.id %}",
+          {
+            title: $("#title").val(),
+            author: $("#author").val(),
+            press: $("#press").val(),
+            title_other: $("#title_other").val(),
+            pub_year_origin: $("#pub_year_origin").val(),
+            pub_year: $("#pub_year").val(),
+            revision: $("#revision").val(),
+            revision_origin: $("#revision_origin").val(),
+            ISBN: $("#ISBN").val(),
+            translator: $("#translator").val(),
+            duration: $("#duration").val(),
+            
+            csrfmiddlewaretoken: $("[name=csrfmiddlewaretoken]").val()
+          },
+        function(res){
+        		
+        		var obj = $.parseJSON(res);
+    			var txt = null;
+				if(obj.status == 'Error'){
+					txt = '<div class="alert alert-danger"><strong>Error!</strong>'+obj.err+'</div>' ;
+					$('#super-body').html("");
+					$('#super-body').append(txt);
+				} else if(obj.status == 'OK'){
+					txt = '<div class="alert alert-success"><strong> OK！</strong></div>';
+					$('#super-body').html("");
+					$('#super-body').append(txt);
+					location.reload();
+				}
+
+
+        });
+      });
+      </script>
+{% endblock define_js %}

@@ -1,0 +1,3 @@
+*.pyc
+readage/media/static
+venv/

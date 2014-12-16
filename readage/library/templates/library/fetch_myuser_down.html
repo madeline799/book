@@ -1,0 +1,12 @@
+{% for cat in myuser_list %}
+
+<tr>
+	<td>{{ cat.id }}</td>
+	<td>{{ cat.name }}</td>
+	<td>{{ cat.user.username }}</td>
+	<td>{{ cat.user.email }}</td>
+	<td>{{ cat.get_group_name }}</td>
+	<td><button type="button" class="btn btn-default btn-xs choose-user-down" userid="{{ cat.id }}" username="{{ cat.name }}" downurl="{% url 'library:updown' 'downward' cat.id %}">降低权限</button></td>
+</tr>
+
+{% endfor %}

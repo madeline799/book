@@ -1,0 +1,15 @@
+.table {
+	margin-bottom: 0px;
+}
+
+/*
+prettify qt's index, search result, make <br> into grid system
+*/
+
+td > .glyphicon.glyphicon-star {
+	color: #ce817f;
+}
+
+td > .glyphicon.glyphicon-star-empty {
+	color: #D3D3D3;
+}

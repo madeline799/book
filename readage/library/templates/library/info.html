@@ -1,0 +1,93 @@
+{% extends 'library/base.html' %}
+{% load staticfiles %}
+
+{% block define_head %}
+  <title>新闻和帮助 - ReadTogether</title>
+  <meta name="description" content="Index">
+  <meta name="author" content="Qt">
+  <link rel="shortcut icon" href="{% static 'library/img/favicon.ico' %}">
+{% endblock define_head %}
+
+{% block define_CSS %}
+  <!-- Custom styles for this template -->
+  <link href="{% static 'library/common-qt.css' %}" rel="stylesheet">
+  <link href="{% static 'library/common-qt-index.css' %}" rel="stylesheet">
+{% endblock define_CSS %}
+{% block nav_info %}active{% endblock nav_info %}
+{% block main %}
+
+<div class="container" id="search-panel">
+  <div class="row">
+    <div class="col-xs-0 col-md-1 "></div>
+    <div class="col-xs-12 col-md-10 ">
+      <img src="{% static 'library/img/logo.jpg' %}" class="img-responsive " alt="Responsive image">
+    </div>    
+    <div class="col-xs-0 col-md-1 "></div>
+  </div>
+</div>
+<div class="container" id="main-container">
+<div class="row">
+  <div class="col-xs-0 col-md-1 "></div>
+  <div class="col-xs-12 col-md-10">
+    <div class="alert alert-info">
+      <h3><span class="flavor size36">Info Board /</span><strong>公告板</strong></h3> 
+      <!-- Nav tabs -->
+      <ul class="nav nav-tabs">
+        <li class="{% if info.get_species_display == "news" %} active {% endif %} {% if info|default:"null" == "null" %} active {% endif %}"><a href="#news" data-toggle="tab">新闻</a></li>
+        <li class="{% if info.get_species_display == "guide" %} active {% endif %}"><a href="#guide" data-toggle="tab">用户指南</a></li>  
+      </ul>
+      <!-- Tab panes -->
+      <div class="tab-content">
+        <div class="tab-pane fade in {% if info.get_species_display == "news" %} active {% endif %} {% if info|default:"null" == "null" %} active {% endif %}" id="news">
+          <div class="panel-group" id="accordion">
+            {% for item in news %}
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <div class="row">
+                    <a data-toggle="collapse" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ forloop.counter }}">
+                      <div class="col-xs-6">{{ item.title }}</div>
+                    </a>
+                    <div class="col-xs-6 text-right" >{{ item.date }}</div>
+                  </div> 
+                </h4>
+              </div>
+              <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse{% if info.id == item.id %} in{% endif %}">
+                <div class="panel-body">
+                  {{ item.content|linebreaks }}
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="tab-pane fade in {% if info.get_species_display == "guide" %} active {% endif %}" id="guide">
+          <div class="panel-group" id="accordion2">
+            {% for item in guide %}
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <div class="row">
+                    <a data-toggle="collapse" data-toggle="collapse" data-parent="#accordion2" href="#collapse2_{{ forloop.counter }}">
+                      <div class="col-xs-6">{{ item.title }}</div>
+                    </a>
+                    <div class="col-xs-6 text-right" >{{ item.date }}</div>
+                  </div> 
+                </h4>
+              </div>
+              <div id="collapse2_{{ forloop.counter }}" class="panel-collapse collapse{% if info.id == item.id %} in{% endif %}">
+                <div class="panel-body">
+                  {{ item.content|linebreaks }}
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-0 col-md-1 "></div>
+</div>
+</div>
+{% endblock main %}

@@ -1,0 +1,189 @@
+{% extends 'library/base.html' %}
+{% load staticfiles %}
+
+{% block define_head %}
+  <title>图书榜单 - ReadTogether</title>
+  <meta name="description" content="Index">
+  <meta name="author" content="Qt">
+  <link rel="shortcut icon" href="{% static 'library/img/favicon.ico' %}">
+{% endblock define_head %}
+
+{% block define_CSS %}
+  <!-- Custom styles for this template -->
+  <link href="{% static 'library/common-qt.css' %}" rel="stylesheet">
+  <link href="{% static 'library/common-qt-index.css' %}" rel="stylesheet">
+{% endblock define_CSS %}
+{% block nav_rank %}active{% endblock nav_rank %}
+{% block main %}
+
+<div class="container" id="search-panel">
+  <div class="row">
+    <div class="col-xs-0 col-md-1 "></div>
+    <div class="col-xs-12 col-md-10 ">
+      <img src="{% static 'library/img/logo.jpg' %}" class="img-responsive " alt="Responsive image">
+    </div>    
+    <div class="col-xs-0 col-md-1 "></div>
+  </div>
+</div>
+<div class="container" id="main-container">
+<div class="row">
+  <div class="col-xs-0 col-md-1 "></div>
+  <div class="col-xs-12 col-md-10">
+    <div class="alert alert-danger">
+      <h3><span class="flavor size36">Hottest Rank /</span><strong>{% if not link_new %}最新榜单（第 {{ ver }} 期榜单）{% else %}第 {{ ver }} 期榜单{% endif %}</strong></h3> 
+      <!-- Nav tabs -->
+      <ul class="nav nav-tabs">
+        
+        <li class="active"><a href="#rate" data-toggle="tab">评分排行</a></li>  
+        <li ><a href="#borrow" data-toggle="tab">借阅排行</a></li>
+        <li><a href="#comment" data-toggle="tab">评论排行</a></li>
+      </ul>
+      <!-- Tab panes -->
+      <div class="tab-content">
+        <div class="tab-pane fade in " id="borrow">
+          <div class="panel-group" id="accordion">
+            {% for item in rank_by_borrow %}
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                   <div class="row">
+                  <a  {% if forloop.counter == 1 %} style="color:#FF2400"  {% elif forloop.counter == 2 %} style="color:#FF7F00" {% elif forloop.counter == 3 %} style="color:#7FFF00" {% else %}style="color:#6F4242"{% endif %} data-toggle="collapse" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ forloop.counter }}">
+                  <div  class="col-xs-10 ">No.{{ forloop.counter }}.{{ item.book.simple_name }} </div>
+                  <div class="col-xs-2 text-right " >{{ item.value|floatformat:0 }}</div>
+                  </a>
+                </div>
+                </h4>
+              </div>
+              <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse">
+                <div class="panel-body" >
+                  <div class="row magxs">
+                    <div class="col-md-8 col-xs-6">
+                      作者：{{ item.book.author }} <br>
+                      版本年份：{{ item.book.pub_year }} <br>
+                      版本社：{{ item.book.press }} <br>
+                      ISBN：{{ item.book.ISBN }} <br>
+                      <a href="{% url 'library:book' item.book.id %}">更多信息...</a>
+                    </div>
+                    <div class="col-md-4 col-xs-6">
+                       <div class="panel panel-default rate-star-panel">
+                          <div class="panel-body">
+                          <ul class="list-unstyled">
+                            <li>评分：</li>
+                            <li class="big-star">
+                              {% for i in range5 %}{% if forloop.counter <= item.book.rate %}<span class="glyphicon glyphicon-star"></span>{% else %}<span class="glyphicon glyphicon-star-empty"></span>{% endif %}{% endfor %}
+                              <span class="rate-score">{{ item.book.rate|floatformat:1 }}</span>
+                            </li>
+                          </ul>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="tab-pane fade in " id="comment">
+          <div class="panel-group" id="accordion2">
+                {% for item in rank_by_comment %}
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <div class="row">
+                  <a  {% if forloop.counter == 1 %} style="color:#FF2400"  {% elif forloop.counter == 2 %} style="color:#FF7F00" {% elif forloop.counter == 3 %} style="color:#7FFF00" {% else %}style="color:#6F4242"{% endif %} data-toggle="collapse" data-toggle="collapse" data-parent="#accordion2" href="#collapse2{{ forloop.counter }}">
+                  <div  class="col-xs-10 ">No.{{ forloop.counter }}.{{ item.book.simple_name }} </div>
+                  <div class="col-xs-2 text-right " >{{ item.value|floatformat:0 }}</div>
+                  </a>
+                </div>
+                </h4>
+              </div>
+              <div id="collapse2{{ forloop.counter }}" class="panel-collapse collapse">
+                <div class="panel-body" >
+                  <div class="row magxs">
+                    <div class="col-md-8 col-xs-6">
+                      作者：{{ item.book.author }} <br>
+                      版本年份：{{ item.book.pub_year }} <br>
+                      版本社：{{ item.book.press }} <br>
+                      ISBN：{{ item.book.ISBN }} <br>
+                      <a href="{% url 'library:book' item.book.id %}">更多信息...</a>
+                    </div>
+                    <div class="col-md-4 col-xs-6">
+                       <div class="panel panel-default rate-star-panel">
+                          <div class="panel-body">
+                          <ul class="list-unstyled">
+                            <li>评分：</li>
+                            <li class="big-star">
+                              {% for i in range5 %}{% if forloop.counter <= item.book.rate %}<span class="glyphicon glyphicon-star"></span>{% else %}<span class="glyphicon glyphicon-star-empty"></span>{% endif %}{% endfor %}
+                              <span class="rate-score">{{ item.book.rate|floatformat:1 }}</span>
+                            </li>
+                          </ul>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="tab-pane fade in active" id="rate">
+          <div class="panel-group" id="accordion3">
+                {% for item in rank_by_rate %}
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                   <div class="row">
+                  <a  {% if forloop.counter == 1 %} style="color:#FF2400"  {% elif forloop.counter == 2 %} style="color:#FF7F00" {% elif forloop.counter == 3 %} style="color:#7FFF00" {% else %}style="color:#6F4242"{% endif %} data-toggle="collapse" data-toggle="collapse" data-parent="#accordion3" href="#collapse3{{ forloop.counter }}">
+                  <div  class="col-xs-10 ">No.{{ forloop.counter }}.{{ item.book.simple_name }} </div>
+                  <div class="col-xs-2 text-right " >{{ item.value|floatformat:1 }}</div>
+                  </a>
+                </div>
+                </h4>
+              </div>
+              <div id="collapse3{{ forloop.counter }}" class="panel-collapse collapse">
+                <div class="panel-body" >
+                  <div class="row magxs">
+                    <div class="col-md-8 col-xs-6">
+                      作者：{{ item.book.author }} <br>
+                      版本年份：{{ item.book.pub_year }} <br>
+                      版本社：{{ item.book.press }} <br>
+                      ISBN：{{ item.book.ISBN }} <br>
+                      <a href="{% url 'library:book' item.book.id %}">更多信息...</a>
+                    </div>
+                    <div class="col-md-4 col-xs-6">
+                       <div class="panel panel-default rate-star-panel">
+                          <div class="panel-body">
+                          <ul class="list-unstyled">
+                            <li>评分：</li>
+                            <li class="big-star">
+                              {% for i in range5 %}{% if forloop.counter <= item.book.rate %}<span class="glyphicon glyphicon-star"></span>{% else %}<span class="glyphicon glyphicon-star-empty"></span>{% endif %}{% endfor %}
+                              <span class="rate-score">{{ item.book.rate|floatformat:1 }}</span>
+                            </li>
+                          </ul>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <ul class="pager">
+        {% if link_old %}
+          <li class="previous"><a href="{{ link_old }}">&larr; 回顾上期榜单</a></li>
+        {% endif %}
+        {% if link_new %}
+          <li class="next"><a href="{{ link_new }}">浏览更新一期 &rarr;</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+  <div class="col-xs-0 col-md-1 "></div>
+</div>
+</div>
+{% endblock main %}

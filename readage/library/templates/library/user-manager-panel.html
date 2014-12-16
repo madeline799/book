@@ -1,0 +1,234 @@
+{% extends 'library/base.html' %}
+{% load staticfiles %}
+
+{% block define_head %}
+	<title>用户管理系统</title>
+	<meta name="description" content="the page for managing users">
+	<meta name="author" content="Fu Zuoyou.">
+	<link rel="shortcut icon" href="{% static 'library/img/favicon.ico' %}">
+{% endblock define_head %}
+
+{% block define_CSS %}
+	<!-- Custom styles for this template -->
+	<link href="{% static 'library:book-manager-panel.css' %}" rel="stylesheet">
+{% endblock define_CSS %}
+
+<!--
+{% url 'library:updown' 'reg_pass' 1 %}<br />
+{% url 'library:updown' 'upward' 2 %}<br />
+{% url 'library:updown' 'downward' 3 %}<br />
+-->
+
+user_register -> name, .user.email .user.username
+user_advance
+
+
+{% block main %}
+
+	<div class="container">
+
+	  <div class="container">
+
+	  <div class="starter-template">
+		<h3>用户管理系统 - {{ user.myuser.name}}({{ user.username }}) 以用户管理员的身份登录.</h3>
+		<!-- <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p> -->
+	  </div>
+	
+	</div><!-- /.container -->
+	
+	<div class="container tabs-display">
+		<!-- Nav tabs -->
+		<ul class="nav nav-tabs nav-justified">
+		  <li class="active"><a href="#borrowing" data-toggle="tab" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-book"></span> 新注册用户审批</a></li>
+		  <li><a href="#editabook" data-toggle="tab" class="btn btn-warning" role="button"><span class="glyphicon glyphicon-pencil"></span> 提升用户权限</a></li>
+		  <li><a href="#booking" data-toggle="tab" class="btn btn-success" role="button"><span class="glyphicon glyphicon-bookmark"></span> 降低用户权限</a></li>
+		  <li><a href="#addnewbook" data-toggle="tab" class="btn btn-info" role="button"><span class="glyphicon glyphicon-list-alt"></span> 发布新公告</a></li>
+		  <!-- <li><a href="#deloldbook" data-toggle="tab" class="btn btn-danger" role="button"><span class="glyphicon glyphicon-trash"></span> 图书丢失</a></li> -->
+		</ul>
+
+		<!-- Tab panes -->
+		<!-- allow new registers -->
+		<div class="tab-content">
+		  <div class="tab-pane fade in active" id="borrowing">
+				<div class="panel panel-default">
+				  <div class="panel-heading"><span class="glyphicon glyphicon-eye-open"></span> 新注册用户审批</div>
+				  <div class="panel-body">
+					目前一共有 <span class="label label-info" id="display-username2">{{ user_register|length }}</span> 位新注册的用户需要进行审批
+				  </div>
+				  
+				  <!-- Table -->
+				  <div class="table-responsive" id="usertable">
+				  <table class="table table-hover "> <!-- table-bordered? -->
+					   <thead>
+						<tr>
+						  <th>ID</th>
+						  <th>昵称</th>
+						  <th>用户名</th>
+						  <th>邮箱</th>
+						  <th>审批操作</th>
+						</tr>
+					  </thead>
+					  <tbody>
+					  	{% for cat in user_register %}
+					  		<tr>
+					  			<td>{{ cat.id }}</td>
+					  			<td>{{ cat.name }}</td>
+					  			<td>{{ cat.user.username }}</td>
+					  			<td>{{ cat.user.email }}</td>
+					  			<td><button type="button" class="btn btn-default btn-xs choose-user-item" passurl="{% url 'library:updown' 'reg_pass' cat.id %}">确认通过</button></td>
+					  		</tr>
+					  	{% endfor %}
+					  </tbody>
+				  </table>
+				  </div>
+				</div>
+		  </div>
+
+		  <!-- 下面是 advance user -->
+		  
+		  <div class="tab-pane fade" id="editabook">
+			 <div class="panel panel-default">
+				  <!-- Default panel contents -->
+				  <div class="panel-heading">
+					<span class="glyphicon glyphicon-import"></span> 提升用户权限
+				  </div>
+				  <div class="panel-body">
+					目前一共有 <span class="label label-info" id="display-username2">{{ user_advance|length }}</span> 位用户申请提升他们的权限
+				  </div>
+				  
+				  <!-- Table -->
+				  <div class="table-responsive" id="usertable">
+				  <table class="table table-hover ">
+					   <thead>
+						<tr>
+						  <th>ID</th>
+						  <th>昵称</th>
+						  <th>用户名</th>
+						  <th>邮箱</th>
+						  <th>用户组</th>
+						  <th>审批操作</th>
+						</tr>
+					  </thead>
+					  <tbody>
+					  	{% for cat in user_advance %}
+					  	<tr>
+					  		<td>{{ cat.id }}</td>
+				  			<td>{{ cat.name }}</td>
+				  			<td>{{ cat.user.username }}</td>
+				  			<td>{{ cat.user.email }}</td>
+					  		<td>{{ cat.get_group_name }}</td>
+					  		<td><button type="button" class="btn btn-default btn-xs choose-user-item" passurl="{% url 'library:updown' 'upward' cat.id %}">提升权限</button></td>
+					  	</tr>
+					  	{% endfor %}
+					  </tbody>
+				  </table>
+				  </div>
+				</div>		 
+		  </div>
+		  
+		  <!-- down user power -->
+		  
+		  <div class="tab-pane fade" id="booking">
+		  
+				<div class="panel panel-default">
+				  <!-- Default panel contents -->
+				  <div class="panel-heading"><span class="glyphicon glyphicon-eye-open"></span> 检索选择被处理用户</div>
+				  <div class="panel-body">
+					<div class="row">
+						<div class="col-md-8 col-md-offset-2 input-group">
+						  <input type="text" class="form-control" placeholder="请输入用户 ID/Name/Email ，确认回车即可" id="find-user-input2">
+						  <input type="hidden" id="find-user-url2" value="{% url 'library:ajax_myuser' %}?admin=user&q=">
+						  <span class="input-group-btn">
+							<button class="btn btn-default" type="button" id="magic2">选择</button>
+						  </span>
+						</div><!-- /input-group -->
+					</div>
+				  </div>
+				  
+				  <!-- Table -->
+				  <div class="table-responsive" id="usertable2">
+				  <table class="table table-hover "> <!-- table-bordered? -->
+					   <thead>
+						<tr>
+						  <th>ID</th>
+						  <th>昵称</th>
+						  <th>用户名</th>
+						  <th>邮箱</th>
+						  <th>用户组</th>
+						  <th>审批操作</th>
+						</tr>
+					  </thead>
+					  <tbody id="find-user-tbody2">
+					  </tbody>
+				  </table>
+				  </div>
+
+				</div>
+
+
+		  </div>
+		  
+		  <!-- add new book -->
+		  
+		  <div class="tab-pane fade" id="addnewbook">
+
+		  	<div class="panel panel-default">
+				  <!-- Default panel contents -->
+				  <div class="panel-heading">
+					<span class="glyphicon glyphicon-import"></span> 发布新公告
+				  </div>
+				  <div class="panel-body">
+
+				<div class="modal-body">
+				
+				<form class="form-horizontal" role="form" id="makemypost-form">
+				  <div class="form-group">
+					<label for="inputTitle" class="col-sm-2 control-label">公告标题</label>
+					<div class="col-sm-10">
+					  <input type="text" class="form-control" id="input-post-title" placeholder="公告标题">
+					</div>
+				  </div>
+				  <div class="form-group">
+					<label for="input-post" class="col-sm-2 control-label">公告内容</label>
+					<div class="col-sm-10">
+					  <textarea class="form-control" rows="8" id="input-post" placeholder="公告内容"></textarea>
+					</div>
+				  </div>
+				  <div class="form-group">
+					<label for="inputRate" class="col-sm-2 control-label">公告类型</label>
+					<div class="col-sm-10">
+						<label class="radio-inline">
+						  <input type="radio" name="optionsRadios" id="inlineRadio5" value="news"> <span class="label label-info">新鲜事</span>
+						</label>
+						<label class="radio-inline">
+						  <input type="radio" name="optionsRadios" id="inlineRadio4" value="guide"> <span class="label label-info">用户指南</span>
+						</label>
+					</div>
+				  </div>
+				  <input type="hidden" id="input-post-url" value="{% url 'library:info_add' %}">
+				</form>
+
+				<div class="alert alert-danger alert-dismissable hidden" id="makemypost-warning">
+				  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				  <div>噢哟！[ <strong></strong> ]您还没有填写哟！</div>
+				</div>
+
+				<div class="alert alert-success hidden" id="makemypost-success">
+					哟吼！新的公告已成功发布！
+				</div>
+				
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-primary btn-block" id="makemypost-submit">好了，添加新公告</button>
+			  </div>
+						
+				  </div>
+			</div>
+		  </div>
+	</div>
+
+{% endblock main %}
+
+{% block define_js %}
+	<script src="{% static 'library:user-manager-panel.js' %}"></script>
+{% endblock define_js %}

@@ -1,0 +1,60 @@
+body {
+  padding-top: 60px;
+}
+
+#search-panel {
+	margin-bottom: 20px;
+}
+
+.magxs {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.magmd {
+	margin-top: 10px;
+	margin-bottom: 50px;
+}
+
+.maglg {
+	margin-bottom: 10px;
+	margin-top: 30px;
+}
+
+.magleft {
+	margin-left: 15px;
+	
+}
+.magword td {
+	word-break: break-all;
+}
+.ranktd {
+	align="right"
+}
+
+.rate-star-panel .big-star {
+	margin-top: 6px;
+	margin-bottom: 6px;
+	font-size: 17px;
+}
+
+.rate-star-panel .big-star .rate-score {
+	color: #FF4500;
+}
+
+.rate-star-panel .glyphicon.glyphicon-star {
+	color: #FF4500;
+}
+
+.rate-star-panel .glyphicon.glyphicon-star-empty {
+	color: #D3D3D3;
+}
+
+.rate-star-panel .glyphicon.rate-bar {
+	height:14px;
+	background-color:#f5cbad;
+}
+
+#main-container {
+	margin-top: 20px;
+}

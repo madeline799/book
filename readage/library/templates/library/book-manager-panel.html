@@ -1,0 +1,470 @@
+{% extends 'library/base.html' %}
+{% load staticfiles %}
+
+{% block define_head %}
+	<title>图书管理系统</title>
+	<meta name="description" content="the page for managing books">
+	<meta name="author" content="Fu Zuoyou.">
+	<link rel="shortcut icon" href="{% static 'library/img/favicon.ico' %}">
+{% endblock define_head %}
+
+{% block define_CSS %}
+	<!-- Custom styles for this template -->
+	<link href="{% static 'library:book-manager-panel.css' %}" rel="stylesheet">
+{% endblock define_CSS %}
+
+{% block main %}
+
+	<div class="container">
+
+	  <div class="container">
+
+	  <div class="starter-template">
+		<h3>图书管理系统 - {{ user.myuser.name}}({{ user.username }}) 以图书管理员的身份登录</h3>
+		<!-- <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p> -->
+	  </div>
+	
+	</div><!-- /.container -->
+	
+	<div class="container tabs-display">
+		<!-- Nav tabs -->
+		<ul class="nav nav-tabs nav-justified">
+		  <li class="active"><a href="#borrowing" data-toggle="tab" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-book"></span> 借出管理</a></li>
+		  <li><a href="#editabook" data-toggle="tab" class="btn btn-warning" role="button"><span class="glyphicon glyphicon-pencil"></span> 图书归还</a></li>
+		   <li><a href="#returnbook" data-toggle="tab" class="btn btn-info" role="button"><span class="glyphicon glyphicon-list-alt"></span> 图书上架</a></li>
+		  <li><a href="#booking" data-toggle="tab" class="btn btn-success" role="button"><span class="glyphicon glyphicon-bookmark"></span> 预约管理</a></li>
+		  <li><a href="#addnewbook" data-toggle="tab" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-list-alt"></span> 添加新书</a></li>
+		  <li><a href="#deloldbook" data-toggle="tab" class="btn btn-danger" role="button"><span class="glyphicon glyphicon-trash"></span> 图书丢失</a></li>
+		</ul>
+
+		<!-- Tab panes -->
+		<div class="tab-content">
+		  <div class="tab-pane fade in active" id="borrowing">
+				<div class="panel panel-default">
+				  <!-- Default panel contents -->
+				  <div class="panel-heading"><span class="glyphicon glyphicon-eye-open"></span> 选择用户</div>
+				  <div class="panel-body">
+					<div class="row">
+						<div class="col-md-8 col-md-offset-2 input-group">
+						  <input type="text" class="form-control" placeholder="请输入用户 ID/Name/Email ，确认回车即可" id="find-user-input">
+						  <input type="hidden" id="find-user-url" value="{% url 'library:ajax_myuser' %}?q=">
+						  <span class="input-group-btn">
+							<button class="btn btn-default" type="button" id="magic">选择</button>
+						  </span>
+						</div><!-- /input-group -->
+					</div>
+				  </div>
+				  
+				  <!-- Table -->
+				  <div class="table-responsive" id="usertable">
+				  <table class="table table-hover "> <!-- table-bordered? -->
+					   <thead>
+						<tr>
+						  <th>#</th>
+						  <th>ID</th>
+						  <th>姓名</th>
+						  <th>邮箱</th>
+						  <th>借书权限</th>
+						  <th>选择用户</th>
+						</tr>
+					  </thead>
+					  <tbody id="find-user-tbody">
+					  </tbody>
+				  </table>
+				  </div>
+				</div>
+
+			
+
+				
+				<div class="maskforpanel">
+				<div class="panel panel-default" id="userborrow">
+				  <!-- Default panel contents -->
+				  <div class="panel-heading">
+					<span class="glyphicon glyphicon-book"></span> 处理用户 <span class="label label-info" id="display-username">yoyo</span> 的借阅
+					<!--<button type="button" class="btn btn-default btn-xs" style="float:right;">撤销选择</button>-->
+					<!-- <button type="button" class="btn btn-success btn-xs">提交</button> -->
+				  </div>
+				  <div class="panel-body">
+					<div class="row">
+						<div class="col-md-8 col-md-offset-2 input-group">
+						  <input type="text" class="form-control" placeholder="请输入书籍的唯一编号 ，确认回车即可" id="borrow-book-bid">
+						  <input type="hidden" id="borrow-book-url" value="{% url 'library:borrow' 1 2 %}">
+						  <input type="hidden" id="borrow-book-uid" value="">
+						  <span class="input-group-btn">
+							<button class="btn btn-default" type="button" id="magic-borrow">借阅</button>
+						  </span>
+						</div><!-- /input-group -->
+					</div>
+				  </div>
+
+				  <!-- Table -->
+				  <div class="table-responsive">
+				  <table class="table table-hover "> <!-- table-bordered? -->
+					   <thead>
+						<tr>
+						  <th>info</th>
+						</tr>
+					  </thead>
+					  <tbody id="borrow-book-tbody">
+						
+					  </tbody>
+				  </table>
+				  </div>
+				</div>
+				</div>
+				
+				<!--
+				<div class="dev-note">
+					dev-note：（可用鼠标移到选择按钮上模拟行为展示）搜索出并点选用户之后，自动弹出下面的表格，然后就可以开始输入书籍的编号，表示处理当前用户的借阅，对书籍进行各种操作即可。
+				</div>
+				-->
+		  </div>
+		  	 <div class="tab-pane fade" id="returnbook">
+
+		  	<div class="panel panel-default">
+				  <!-- Default panel contents -->
+				  <div class="panel-heading">
+					<span class="glyphicon glyphicon-import"></span> 书籍归还上架
+				  </div>
+				  <div class="panel-body">
+					<div class="row">
+						<div class="col-md-8 col-md-offset-2 input-group">
+						  <input type="text" class="form-control" placeholder="请输入书籍的唯一编号 ，确认回车即可" id="return-book-bid2">
+						  <span class="input-group-btn">
+							<button class="btn btn-default" type="button" id="magic-return2">选择</button>
+						  </span>
+						</div><!-- /input-group -->
+					</div>
+				  </div>
+				  
+				  <!-- Table -->
+				  <div class="table-responsive" id="usertable">
+				  <table class="table table-hover "> <!-- table-bordered? -->
+					   <thead>
+						<tr>
+						  <th>info</th>
+						</tr>
+					  </thead>
+					  <tbody id="return-tbody2">
+					  </tbody>
+				  </table>
+				  </div>
+				</div>		
+
+
+		  </div>
+		  
+		  <!-- 预约管理 -->
+		  
+		  <div class="tab-pane fade" id="booking">
+		  
+				<div class="panel panel-default">
+				  <!-- Default panel contents -->
+				  <div class="panel-heading"><span class="glyphicon glyphicon-eye-open"></span> 选择用户</div>
+				  <div class="panel-body">
+					<div class="row">
+						<div class="col-md-8 col-md-offset-2 input-group">
+						  <input type="text" class="form-control" placeholder="请输入用户 ID/Name/Email ，确认回车即可" id="find-user-input2">
+						  <input type="hidden" id="find-user-url2" value="{% url 'library:ajax_myuser' %}?q=">
+						  <span class="input-group-btn">
+							<button class="btn btn-default" type="button" id="magic2">选择</button>
+						  </span>
+						</div><!-- /input-group -->
+					</div>
+				  </div>
+				  
+				  <!-- Table -->
+				  <div class="table-responsive" id="usertable2">
+				  <table class="table table-hover "> <!-- table-bordered? -->
+					   <thead>
+						<tr>
+						  <th>#</th>
+						  <th>ID</th>
+						  <th>姓名</th>
+						  <th>邮箱</th>
+						  <th>借书权限</th>
+						  <th>选择用户</th>
+						</tr>
+					  </thead>
+					  <tbody id="find-user-tbody2">
+					  </tbody>
+				  </table>
+				  </div>
+
+				</div>
+
+				<div class="maskforpanel">
+				<div class="panel panel-default" id="userborrow">
+				  <!-- Default panel contents -->
+				  <div class="panel-heading">
+					<span class="glyphicon glyphicon-book"></span> 处理用户 <span class="label label-info" id="display-username2">yoyo</span> 的预约
+					<!--<button type="button" class="btn btn-default btn-xs" style="float:right;">撤销选择</button>-->
+					<!-- <button type="button" class="btn btn-success btn-xs">提交</button> -->
+				  </div>
+				  <div class="panel-body">
+					<div class="row">
+						<div class="col-md-8 col-md-offset-2 input-group">
+						  <input type="text" class="form-control" placeholder="请输入书籍的唯一编号 ，确认回车即可" id="borrow-book-bid2">
+						  <input type="hidden" id="borrow-book-url2" value="{% url 'library:borrow' 1 2 %}">
+						  <input type="hidden" id="borrow-book-uid2" value="">
+						  <span class="input-group-btn">
+							<button class="btn btn-default" type="button" id="magic-borrow2">处理</button>
+						  </span>
+						</div><!-- /input-group -->
+					</div>
+				  </div>
+
+				  <!-- Table -->
+				  <div class="table-responsive">
+				  <table class="table table-hover "> <!-- table-bordered? -->
+					   <thead>
+						<tr>
+						  <th>info</th>
+						</tr>
+					  </thead>
+					  <tbody id="borrow-book-tbody2">
+						
+					  </tbody>
+				  </table>
+				  </div>
+				</div>
+				</div>
+
+		  </div>
+		  
+		  <!-- add new book -->
+		  
+		  <div class="tab-pane fade" id="addnewbook">
+
+		  	<div class="panel panel-default">
+				  <!-- Default panel contents -->
+				  <div class="panel-heading">
+					<span class="glyphicon glyphicon-import"></span> 新书上架
+				  </div>
+				  <div class="panel-body">
+					<div class="row addnewbook-row">
+				<div class="col-xs-12 col-sm-12 col-md-12">
+					
+				
+				<form class="form-horizontal" role="form" id="fixbookinfo-form">
+				  
+				  <div class="form-group">
+					<label for="inputTitle" class="col-sm-3 control-label">标准名</label>
+					<div class="col-sm-7">
+					  <input type="text" class="form-control" placeholder="标准名" id="title">
+					</div>
+				  </div>
+				  
+				 <div class="form-group">
+					<label for="inputTitle" class="col-sm-3 control-label">外文原名</label>
+					<div class="col-sm-7">
+					  <input type="text" class="form-control" placeholder="外文原名" id="title_other">
+					</div>
+				  </div>
+				  
+
+				  
+				  <div class="form-group">
+					<label for="inputTitle" class="col-sm-3 control-label">作者</label>
+					<div class="col-sm-7">
+					  <input type="text" class="form-control" placeholder="作者" id="author">
+					</div>
+				  </div>
+
+
+
+				  <div class="form-group">
+					<label for="inputTitle" class="col-sm-3 control-label">译者</label>
+					<div class="col-sm-7">
+					  <input type="text" class="form-control" placeholder="译者" id="translator">
+					</div>
+				  </div>
+				  
+
+				  
+				  <div class="form-group">
+					<label for="inputTitle" class="col-sm-3 control-label">出版社</label>
+					<div class="col-sm-7">
+					  <input type="text" class="form-control" placeholder="出版社" id="press">
+					</div>
+				  </div>
+				  
+
+
+				  <div class="form-group">
+					<label for="inputTitle" class="col-sm-3 control-label">出版年</label>
+					<div class="col-sm-7">
+					  <input type="text" class="form-control" placeholder="出版年" id="pub_year">
+					</div>
+				  </div>
+				  
+
+				 
+				  
+				  <div class="form-group">
+					<label for="inputTitle" class="col-sm-3 control-label">原版出版年</label>
+					<div class="col-sm-7">
+					  <input type="text" class="form-control" placeholder="原版出版年" id="pub_year_origin">
+					</div>
+				  </div>
+				  
+
+	  
+				  
+				  <div class="form-group">
+					<label for="inputTitle" class="col-sm-3 control-label">版次</label>
+					<div class="col-sm-7">
+					  <input type="text" class="form-control" placeholder="版次" id="revision">
+					</div>
+				  </div>
+				  
+
+
+
+				  
+				  <div class="form-group">
+					<label for="inputTitle" class="col-sm-3 control-label">原版版次</label>
+					<div class="col-sm-7">
+					  <input type="text" class="form-control" placeholder="原版版次" id="revision_origin">
+					</div>
+				  </div>
+			
+				  
+
+				  
+			
+				  
+				  <div class="form-group">
+					<label for="inputTitle" class="col-sm-3 control-label"> 借书期限</label>
+					<div class="col-sm-7">
+					  <input type="text" class="form-control" placeholder=" 借书期限（默认14天）" id="duration">
+					</div>
+				  </div>
+				  
+
+				  
+				  <div class="form-group">
+					<label for="inputTitle" class="col-sm-3 control-label">ISBN</label>
+					<div class="col-sm-7">
+					  <input type="text" class="form-control" placeholder="ISBN" id="ISBN">
+					</div>
+				  </div>
+				  {% csrf_token %}
+				  <!--
+				  	<div class="row">
+						
+							<a href="#notice"><button class="btn btn-md btn-primary  " type="button"  id="super-submit" style="float:right; margin-right: 20px;" >
+						添加这本书</button></a>
+
+					
+					</div>-->
+					<div class="form-group">
+					<div class="col-sm-2">
+					</div>
+					<div class="col-sm-8">
+					  <a href="#notice"><button class="btn btn-md btn-primary  btn-block" type="button"  id="super-submit">
+						添加这本书</button></a>
+					</div>
+				  </div>
+
+				  <input type="submit" style="position: absolute; left: -9999px"/>
+				  <input type="hidden" value="{% url 'library:book_add' %}" id="addbookurl" />
+
+				</form>
+					
+				</div>
+			 </div>
+				  </div>
+				  
+				  <!-- Table -->
+				  <div class="table-responsive" id="usertable">
+				  <table class="table table-hover "> <!-- table-bordered? -->
+					   <thead>
+						<tr>
+						  <th>info</th>
+						</tr>
+					  </thead>
+					  <tbody id="super-body">
+					  </tbody>
+				  </table>
+				  </div>
+				</div>		
+
+
+		  </div>
+		  
+		  <!-- 下面是 edit newbook -->
+		  
+		  <div class="tab-pane fade" id="editabook">
+			 <div class="panel panel-default">
+				  <!-- Default panel contents -->
+				  <div class="panel-heading">
+					<span class="glyphicon glyphicon-import"></span> 处理归还书籍
+				  </div>
+				  <div class="panel-body">
+					<div class="row">
+						<div class="col-md-8 col-md-offset-2 input-group">
+						  <input type="text" class="form-control" placeholder="请输入书籍的唯一编号 ，确认回车即可" id="return-book-bid">
+						  <span class="input-group-btn">
+							<button class="btn btn-default" type="button" id="magic-return">选择</button>
+						  </span>
+						</div><!-- /input-group -->
+					</div>
+				  </div>
+				  
+				  <!-- Table -->
+				  <div class="table-responsive" id="usertable">
+				  <table class="table table-hover "> <!-- table-bordered? -->
+					   <thead>
+						<tr>
+						  <th>info</th>
+						</tr>
+					  </thead>
+					  <tbody id="return-tbody">
+					  </tbody>
+				  </table>
+				  </div>
+				</div>		 
+		  </div>
+		  
+		  <!-- del old book -->
+		  
+		  <div class="tab-pane fade" id="deloldbook">
+		  	<div class="panel panel-default">
+				  <!-- Default panel contents -->
+				  <div class="panel-heading">
+					<span class="glyphicon glyphicon-import"></span> 图书丢失下架
+				  </div>
+				  <div class="panel-body">
+					<div class="row">
+						<div class="col-md-8 col-md-offset-2 input-group">
+						  <input type="text" class="form-control" placeholder="请输入书籍的唯一编号 ，确认回车即可" id="return-book-bid3">
+						  <span class="input-group-btn">
+							<button class="btn btn-default" type="button" id="magic-return3">选择</button>
+						  </span>
+						</div><!-- /input-group -->
+					</div>
+				  </div>
+				  
+				  <!-- Table -->
+				  <div class="table-responsive" id="usertable">
+				  <table class="table table-hover "> <!-- table-bordered? -->
+					   <thead>
+						<tr>
+						  <th>info</th>
+						</tr>
+					  </thead>
+					  <tbody id="return-tbody3">
+					  </tbody>
+				  </table>
+				  </div>
+				</div>		
+		  </div>
+	</div>
+
+{% endblock main %}
+
+{% block define_js %}
+	<script src="{% static 'library:book-manager-panel.js' %}"></script>
+{% endblock define_js %}

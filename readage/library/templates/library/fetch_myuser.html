@@ -1,0 +1,12 @@
+{% for cat in myuser_list %}
+
+<tr>
+	<td>{{ cat.id }}</td>
+	<td>{{ cat.name }}</td>
+	<td>{{ cat.user.username }}</td>
+	<td>{{ cat.user.email }}</td>
+	<td>{{ cat.remain_borrowing_num }}</td>
+	<td><button type="button" class="btn btn-default btn-xs choose-user" userid="{{ cat.id }}" username="{{ cat.name }}">选择该用户</button></td>
+</tr>
+
+{% endfor %}
